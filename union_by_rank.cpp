@@ -1,5 +1,5 @@
 /*
-    Disjoint set union by rank;
+    Disjoint set union by rank and path compression;
 */
 
 #include<iostream>
@@ -20,9 +20,22 @@ class Disjoint_set{
             return x;
         }
 
+        //Path compression
+        int find_rep_eff(int x){
+
+            if(par[x] == x){
+                return x;
+            }
+
+            par[x] = find_rep_eff(par[x]);
+
+            return par[x];
+
+        }
+
         bool is_connected(int x , int y){
-            int x_rep = find_rep(x);
-            int y_rep = find_rep(y);
+            int x_rep = find_rep_eff(x);
+            int y_rep = find_rep_eff(y);
 
             return x_rep == y_rep;
         }
@@ -30,8 +43,8 @@ class Disjoint_set{
         //Union by rank it do union efficiently
         void do_union(int x , int y){
 
-            int x_rep = find_rep(x);
-            int y_rep = find_rep(y);
+            int x_rep = find_rep_eff(x);
+            int y_rep = find_rep_eff(y);
 
             if(x_rep == y_rep){
                 return ;
